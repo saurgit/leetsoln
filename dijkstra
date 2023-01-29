@@ -1,0 +1,63 @@
+vector <int> dijkstra(int n, vector<vector<int>> adj[], int s)
+    {
+        // Code here
+        
+        
+        vector<int> res(n,1e6);
+        // priority_queue<pi,vector<pi>,greater<pi>> pq;
+        // pq.push(make_pair(0,s));
+        set<pair<int,int>> st;
+        st.insert({0,s});
+        res[s]=0;
+        while(!st.empty()){
+            auto t=*st.begin();
+            st.erase(t);
+            int d_node=t.first;
+            int node=t.second;
+            for(auto it : adj[node]){
+                int adjnode=it[0];
+                int dis=it[1];
+                if(d_node + dis < res[adjnode]){
+                    if(res[adjnode]!=1e6)
+                        st.erase({res[adjnode],adjnode});
+                    res[adjnode]=d_node + dis;
+                    st.insert({res[adjnode],adjnode});
+                }
+            }
+        }
+        
+        return res;
+    }
+    
+    
+    
+    
+    //priority queue
+    
+    typedef pair<int,int> pi;
+    vector <int> dijkstra(int n, vector<vector<int>> adj[], int s)
+    {
+        // Code here
+        
+        
+        vector<int> res(n,1e6);
+        priority_queue<pi,vector<pi>,greater<pi>> pq;
+        pq.push(make_pair(0,s));
+        res[s]=0;
+        while(!pq.empty()){
+            auto t=pq.top();
+            pq.pop();
+            int d_node=t.first;
+            int node=t.second;
+            for(auto it : adj[node]){
+                int adjnode=it[0];
+                int dis=it[1];
+                if(d_node + dis < res[adjnode]){
+                    res[adjnode]=d_node + dis;
+                    pq.push({res[adjnode],adjnode});
+                }
+            }
+        }
+        
+        return res;
+    }
