@@ -1,0 +1,30 @@
+class Solution {
+public:
+    vector<int> findOrder(int n, vector<vector<int>>& preq) {
+        vector<int> indegree(n,0);
+        vector<vector<int>> adj(n);
+        for(auto it : preq){
+            indegree[it[0]]++;
+            adj[it[1]].push_back(it[0]);
+        }
+        queue<int> q;
+        for(int i=0;i<n;i++){
+            if(indegree[i]==0)
+                q.push(i);
+        }
+        vector<int> res;
+        while(!q.empty()){
+            int node=q.front();
+            q.pop();
+            res.push_back(node);
+            for(auto child : adj[node]){
+                indegree[child]--;
+                if(indegree[child]==0)
+                q.push(child);
+            }
+        }
+        if(res.size()==n)
+        return res;
+        return {};
+    }
+};
