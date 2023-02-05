@@ -1,0 +1,24 @@
+void shortest_distance(vector<vector<int>>&dist){
+	    // Code here
+	    
+	    int n=dist.size();
+	    for(int i=0;i<n;i++){ // intermediate
+	        for(int j=0;j<n;j++){  // source
+	            if(dist[i][j]==-1)
+	            dist[i][j]=1e6;
+	        }
+	    }
+	    for(int i=0;i<n;i++){ // intermediate
+	        for(int j=0;j<n;j++){  // source
+	            for(int k=0;k<n;k++){   // destination
+    	            if(dist[j][k] > dist[j][i] + dist[i][k])
+    	               dist[j][k] = dist[j][i] + dist[i][k];
+	            }
+	        }
+	    }
+	    for(int i=0;i<n;i++){ // intermediate
+	        for(int j=0;j<n;j++){  // source
+	            if(dist[i][j]==1e6)
+	            dist[i][j]=-1;
+	        }
+	    }
