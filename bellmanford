@@ -1,0 +1,22 @@
+vector<int> bellman_ford(int n, vector<vector<int>>& edges, int S) {
+        // Code here
+        vector<int> dist(n,1e8);
+        dist[S]=0;
+        for(int i=0;i<n-1;i++){
+            for(auto it : edges){
+                if(dist[it[0]] + it[2] < dist[it[1]])
+                    dist[it[1]]=dist[it[0]] + it[2];
+            }
+        }
+        // negative cycle check
+        bool flag=false;
+        for(auto it : edges){
+            if(dist[it[0]] + it[2] < dist[it[1]]){
+                dist[it[1]]=dist[it[0]] + it[2];
+                flag=true;
+                break;
+            }
+        }
+        if(flag)return {-1};
+        return dist;
+    }
