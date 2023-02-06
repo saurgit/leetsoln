@@ -1,0 +1,40 @@
+int query(int node,int st,int en,int l ,int r){              
+        if(r < st || en < l)         // no overlap condition
+            return 0;
+        if(l<=st && en<=r)           // complete overlap
+            return tree[node];
+        int mid=(st + en)/2;
+        int q1=query(2*node,st,mid,l,r);
+        int q2=query(2*node+1,mid+1,en,l,r);
+        return q1 + q2;                        // sum query, it can be converted to max or min query also by minute changes
+    }
+    
+ void myupdate(int node,int st,int en,int idx,int val){
+        if(st==en){
+            num[st]=val;        // update the value at index with given value
+            tree[node]=val;     // also update corresponding node
+            return;
+        }
+        int mid=(st+ en)/2;
+        if(idx<=mid){
+            myupdate(2*node,st,mid,idx,val);
+        }else{
+            myupdate(2*node + 1,mid+1,en,idx,val);
+        }
+        tree[node]=tree[2*node] + tree[2*node + 1];        // if child node get updated then parent node get updated accordingly
+    }
+    
+        int n=nums.size();
+        tree.resize(4*n+1);
+        build(1,0,n-1);
+        
+     void build(int node,int st,int en){
+        if(st==en){                        // if unit node then put vector value in the node
+            tree[node]=num[st];
+            return;
+        }
+        int mid=(st + en)/2;
+        build(2*node,st,mid);
+        build(2*node+1,mid+1,en);
+        tree[node]=tree[2*node] + tree[2*node+1];       // manipulate this according to sum ,min, or max
+    }
