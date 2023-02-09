@@ -1,4 +1,5 @@
 class Disjoint{
+public:
     vector<int> parent,rank,size;
     Disjoint(int n){
         parent.resize(n+1);
