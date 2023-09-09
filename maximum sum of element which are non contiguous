@@ -1,0 +1,90 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+class Disjoint{
+public:
+    vector<int> parent,size;
+    Disjoint(int n){
+        parent.resize(n+1);
+        size.resize(n+1,1);
+        for(int i=0;i<=n;i++){
+            parent[i]=i;
+        }
+    }
+    
+    int find_par(int node){
+        if(node==parent[node])
+            return node;
+        return parent[node]=find_par(parent[node]);
+    }
+    
+    void unionBySize(int u ,int v){
+        int ulp_u=find_par(u);
+        int ulp_v=find_par(v);
+        if(ulp_u==ulp_v)return;
+        if(size[ulp_u] >= size[ulp_v]){
+            parent[ulp_v]=ulp_u;
+            size[ulp_u]+=size[ulp_v];
+        }else{
+            parent[ulp_u]=ulp_v;
+            size[ulp_v]+=size[ulp_u];
+        }
+    }
+    
+};
+typedef long long int ll;
+int mujhe_max_do(vector<int> &temp,unordered_map<int,int> &mp){
+    // sort(temp.begin(),temp.end());
+    ll maxsum=0,curr=0;
+    for(int i=0;i<temp.size();i+=2){
+        curr+=temp[i]*mp[temp[i]];
+    }
+    maxsum=max(maxsum,curr);
+    curr=0;
+    for(int i=1;i<temp.size();i+=2){
+        curr+=temp[i]*mp[temp[i]];
+    }
+    maxsum=max(maxsum,curr);
+    return maxsum;
+}
+
+int maxSum(vector<int> & vec){
+    unordered_map<int,int> mp;
+    int n=vec.size();
+    int maxi=*max_element(vec.begin(),vec.end());
+    Disjoint dis(maxi+1);
+    for(int i=0;i<n;i++){
+        if(mp.count(vec[i]-1)){
+            dis.unionBySize(vec[i]-1,vec[i]);
+        }
+        if(mp.count(vec[i]+1)){
+            dis.unionBySize(vec[i]+1,vec[i]);
+        }
+        mp[vec[i]]++;
+    }
+    
+    for(int i=0;i<=maxi;i++){
+        dis.parent[i]=dis.find_par(i);
+    }
+    unordered_map<int,vector<int>> m;
+    for(int i=0;i<=maxi;i++){
+        int par=dis.find_par(i);
+        int siz=dis.size[par];
+        if(siz>1 || mp.find(par)!=mp.end())
+            m[par].push_back(i);
+    }
+    int res=0;
+    for(auto it : m){
+        res+=mujhe_max_do(it.second,mp);
+    }
+    return res;
+}
+
+int main()
+{
+    vector<int> vec{1,2,3,4,5,6,7,8};
+    int sum=maxSum(vec);
+    cout<<sum<<endl;
+    return 0;
+}
